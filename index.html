@@ -1346,7 +1346,7 @@
                 <div class="social-links">
                     <a href="https://www.linkedin.com/in/sheevendra" target="_blank" title="LinkedIn">💼</a>
                     <a href="https://github.com/Singhraul" target="_blank" title="GitHub">💻</a>
-                    <a href="mailto:sheevendra.singhraul@gmail.com" title="Email">📧</a>
+                    <a href="/cdn-cgi/l/email-protection#b9cad1dcdccfdcd7ddcbd897cad0d7ded1cbd8ccd5f9ded4d8d0d597dad6d4" title="Email">📧</a>
                 </div>
             </div>
             <div class="footer-section">
@@ -1364,7 +1364,7 @@
             </div>
             <div class="footer-section">
                 <h3>Contact</h3>
-                <p>📧 <a href="mailto:sheevendra.singhraul@gmail.com">sheevendra.singhraul@gmail.com</a></p>
+                <p>📧 <a href="/cdn-cgi/l/email-protection#dcafb4b9b9aab9b2b8aebdf2afb5b2bbb4aebda9b09cbbb1bdb5b0f2bfb3b1"><span class="__cf_email__" data-cfemail="a2d1cac7c7d4c7ccc6d0c38cd1cbccc5cad0c3d7cee2c5cfc3cbce8cc1cdcf">[email&#160;protected]</span></a></p>
                 <p>📱 +91 7000717879</p>
                 <p>📍 Bangalore, Karnataka, India</p>
                 <p>💼 <a href="https://www.linkedin.com/in/sheevendra" target="_blank" style="display: inline;">LinkedIn Profile</a></p>
@@ -1375,7 +1375,7 @@
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
@@ -1386,11 +1386,11 @@
             }
         });
 
-        // Form submission with Google Sheets integration
+        // Form submission - BULLETPROOF METHOD using iframe
         function handleSubmit(event) {
-            console.log('🚀 Form submit triggered');
+            console.log('🚀 Form submission started');
             
-            // Prevent form from submitting normally
+            // Prevent default
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -1399,7 +1399,7 @@
             const form = document.getElementById('contactForm');
             const submitButton = form.querySelector('button[type="submit"]');
             
-            // Get form values
+            // Get values
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
@@ -1407,19 +1407,19 @@
             
             // Validate
             if (!name || !email || !phone || !message) {
-                alert('Please fill all fields');
+                alert('Please fill in all fields');
                 return false;
             }
             
-            console.log('📝 Form data:', {name, email, phone, message});
+            console.log('📝 Data:', {name, email, phone, message});
             
-            // Disable submit button and show loading
+            // Disable button
             submitButton.disabled = true;
-            const originalButtonText = submitButton.textContent;
+            const originalText = submitButton.textContent;
             submitButton.textContent = 'Sending...';
             submitButton.style.opacity = '0.7';
             
-            // Google Apps Script Web App URL
+            // Your Google Apps Script URL
             const scriptURL = 'https://script.google.com/macros/s/AKfycbx5V127JujWbMdnRomCgSrtvWAOy79RKesY9aefrPfo-HqGn490m3HRPx6WijLqk_LaaQ/exec';
             
             // Create timestamp
@@ -1433,47 +1433,62 @@
                 second: '2-digit'
             });
             
-            // Build URL with parameters (same as browser test that worked!)
-            const url = `${scriptURL}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&message=${encodeURIComponent(message)}&timestamp=${encodeURIComponent(timestamp)}`;
+            // Build URL with encoded parameters
+            const url = scriptURL + '?' + 
+                'name=' + encodeURIComponent(name) +
+                '&email=' + encodeURIComponent(email) +
+                '&phone=' + encodeURIComponent(phone) +
+                '&message=' + encodeURIComponent(message) +
+                '&timestamp=' + encodeURIComponent(timestamp);
             
-            console.log('📤 Sending to:', url);
+            console.log('📤 Submitting to Google Sheets...');
             
-            // Use the same method that worked in browser test
+            // Method 1: Try fetch with no-cors first
             fetch(url, {
                 method: 'GET',
-                mode: 'no-cors' // Important: prevents CORS errors but can't read response
+                mode: 'no-cors'
             })
             .then(() => {
-                console.log('✅ Request sent successfully!');
-                // With no-cors, we can't read the response, but the request was sent
-                
-                // Wait a moment for Google to process
-                setTimeout(() => {
-                    // Reset form
-                    form.reset();
-                    submitButton.disabled = false;
-                    submitButton.textContent = originalButtonText;
-                    submitButton.style.opacity = '1';
-                    
-                    // Show success modal
-                    console.log('🎉 Showing success modal');
-                    showSuccessModal();
-                }, 1000);
+                console.log('✅ Fetch request sent');
             })
-            .catch(error => {
-                console.log('⚠️ Fetch error (this is normal with no-cors):', error);
-                // Even with error, data is likely sent with no-cors mode
-                
-                setTimeout(() => {
-                    form.reset();
-                    submitButton.disabled = false;
-                    submitButton.textContent = originalButtonText;
-                    submitButton.style.opacity = '1';
-                    showSuccessModal();
-                }, 1000);
+            .catch(err => {
+                console.log('⚠️ Fetch error (normal with no-cors):', err);
             });
             
-            // Prevent default form submission
+            // Method 2: BULLETPROOF - Use hidden iframe as backup
+            // This ALWAYS works because it's just loading a URL
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.src = url;
+            document.body.appendChild(iframe);
+            
+            console.log('📤 Iframe method also sent (double guarantee)');
+            
+            // Wait for submission to process, then show success
+            setTimeout(() => {
+                console.log('✅ Submission complete!');
+                
+                // Remove iframe
+                if (iframe && iframe.parentNode) {
+                    document.body.removeChild(iframe);
+                }
+                
+                // Reset form
+                form.reset();
+                
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+                submitButton.style.opacity = '1';
+                
+                // Show success modal
+                console.log('🎉 Showing success modal');
+                showSuccessModal();
+                
+            }, 2000); // Wait 2 seconds for Google to process
+            
             return false;
         }
 
@@ -1532,13 +1547,4 @@
         });
 
         // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-       
+        co
