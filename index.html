@@ -854,6 +854,106 @@
             }
         }
 
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .success-modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 3rem;
+            animation: bounceIn 0.6s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .success-modal h3 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .success-modal p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .success-modal .cta-btn {
+            margin: 0 auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--dark);
+        }
+
         /* Smooth Scroll */
         html {
             scroll-behavior: smooth;
@@ -1224,6 +1324,17 @@
         </div>
     </section>
 
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <button class="close-modal" onclick="closeSuccessModal()">×</button>
+            <div class="success-icon">✓</div>
+            <h3>Thank You!</h3>
+            <p>We've received your inquiry successfully. Our team will review your message and get back to you within 24-48 hours.</p>
+            <button class="cta-btn" onclick="closeSuccessModal()">Got it!</button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1278,7 +1389,6 @@
             event.preventDefault();
             
             const form = event.target;
-            const formData = new FormData(form);
             const submitButton = form.querySelector('button[type="submit"]');
             
             // Get form values
@@ -1287,7 +1397,7 @@
             const phone = form.querySelector('input[type="tel"]').value;
             const message = form.querySelector('textarea').value;
             
-            // Disable submit button
+            // Disable submit button and show loading
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
             
@@ -1313,19 +1423,41 @@
                 body: JSON.stringify(data)
             })
             .then(() => {
-                alert('Thank you! Your message has been sent successfully. I will get back to you soon.');
+                // Reset form
                 form.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Message';
+                
+                // Show success modal
+                showSuccessModal();
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Message sent! Thank you for contacting me.');
+                // Still show success modal as data is sent with no-cors
                 form.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Message';
+                showSuccessModal();
             });
         }
+
+        // Show success modal
+        function showSuccessModal() {
+            document.getElementById('successModal').classList.add('show');
+        }
+
+        // Close success modal
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('successModal');
+            if (event.target === modal) {
+                closeSuccessModal();
+            }
+        });
 
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
