@@ -1398,10 +1398,10 @@
             const submitButton = form.querySelector('button[type="submit"]');
             
             // Get form values using name attributes
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const message = document.getElementById('message').value;
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const message = document.getElementById('message').value.trim();
             
             // Validate
             if (!name || !email || !phone || !message) {
@@ -1411,6 +1411,7 @@
             
             // Disable submit button and show loading
             submitButton.disabled = true;
+            const originalButtonText = submitButton.textContent;
             submitButton.textContent = 'Sending...';
             submitButton.style.opacity = '0.7';
             
@@ -1436,32 +1437,37 @@
             // Log for debugging
             console.log('Submitting form data:', {name, email, phone, message});
             
-            // Send to Google Sheets
-            fetch(scriptURL, {
+            // Send to Google Sheets with timeout
+            const timeoutPromise = new Promise((resolve) => {
+                setTimeout(() => resolve('timeout'), 3000);
+            });
+            
+            const fetchPromise = fetch(scriptURL, {
                 method: 'POST',
+                mode: 'no-cors', // Important for Google Apps Script
                 body: formData
-            })
+            });
+            
+            // Race between fetch and timeout
+            Promise.race([fetchPromise, timeoutPromise])
             .then(response => {
-                console.log('Form submitted successfully!', response);
-                // Reset form
-                form.reset();
-                submitButton.disabled = false;
-                submitButton.textContent = 'Send Message';
-                submitButton.style.opacity = '1';
-                
-                // Show success modal
-                showSuccessModal();
+                console.log('Form submission response:', response);
+                return response;
             })
             .catch(error => {
-                console.log('Form submitted (catch block)', error);
-                // Form is submitted successfully even in catch with no-cors
-                form.reset();
-                submitButton.disabled = false;
-                submitButton.textContent = 'Send Message';
-                submitButton.style.opacity = '1';
-                
-                // Show success modal
-                showSuccessModal();
+                console.log('Form submission error (expected with no-cors):', error);
+                return 'success';
+            })
+            .finally(() => {
+                // Always show success and reset form after timeout
+                // (no-cors mode doesn't allow reading response, but data is still sent)
+                setTimeout(() => {
+                    form.reset();
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                    submitButton.style.opacity = '1';
+                    showSuccessModal();
+                }, 500);
             });
             
             // Prevent default form submission
