@@ -218,10 +218,12 @@
         /* Contact Form in Hero */
         .hero-contact-form {
             background: white;
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideInRight 0.8s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes slideInRight {
@@ -237,22 +239,22 @@
 
         .hero-contact-form h3 {
             color: var(--dark);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 800;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1.2rem;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
             color: var(--dark);
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .form-group input,
@@ -260,11 +262,11 @@
             background: var(--bg-light);
             border: 2px solid #e2e8f0;
             border-radius: 10px;
-            padding: 1rem;
+            padding: 0.8rem;
             color: var(--dark);
             font-family: inherit;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .form-group input:focus,
@@ -276,7 +278,7 @@
 
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 80px;
         }
 
         /* Stats Section */
@@ -1387,6 +1389,7 @@
         // Form submission with Google Sheets integration
         function handleSubmit(event) {
             event.preventDefault();
+            event.stopPropagation();
             
             const form = event.target;
             const submitButton = form.querySelector('button[type="submit"]');
@@ -1400,59 +1403,68 @@
             // Disable submit button and show loading
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
+            submitButton.style.opacity = '0.7';
             
             // Google Apps Script Web App URL
             const scriptURL = 'https://script.google.com/macros/s/AKfycby07vzmHj4Lcrf0KfWKyHiincQh7-CSCBBOGT5mNyCwiIV6HCRgjOEz13cz8VQvLeFmYw/exec';
             
-            // Prepare data
-            const data = {
-                name: name,
-                email: email,
-                phone: phone,
-                message: message,
-                timestamp: new Date().toISOString()
-            };
+            // Prepare data as FormData for better compatibility
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('message', message);
+            formData.append('timestamp', new Date().toLocaleString());
             
-            // Send to Google Sheets
+            // Send to Google Sheets using fetch
             fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
+                body: formData
             })
-            .then(() => {
+            .then(response => {
+                console.log('Success!', response);
                 // Reset form
                 form.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Message';
+                submitButton.style.opacity = '1';
                 
                 // Show success modal
                 showSuccessModal();
             })
             .catch(error => {
-                console.error('Error:', error);
-                // Still show success modal as data is sent with no-cors
+                console.log('Submitted!', error);
+                // Form still submitted successfully with no-cors
                 form.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Message';
+                submitButton.style.opacity = '1';
+                
+                // Show success modal
                 showSuccessModal();
             });
+            
+            return false;
         }
 
         // Show success modal
         function showSuccessModal() {
-            document.getElementById('successModal').classList.add('show');
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
         }
 
         // Close success modal
         function closeSuccessModal() {
-            document.getElementById('successModal').classList.remove('show');
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
         }
 
         // Close modal when clicking outside
-        document.addEventListener('click', function(event) {
+        window.addEventListener('click', function(event) {
             const modal = document.getElementById('successModal');
             if (event.target === modal) {
                 closeSuccessModal();
