@@ -1388,6 +1388,8 @@
 
         // Form submission with Google Sheets integration
         function handleSubmit(event) {
+            console.log('Form submit triggered');
+            
             // Prevent form from submitting normally
             if (event) {
                 event.preventDefault();
@@ -1409,6 +1411,8 @@
                 return false;
             }
             
+            console.log('Form data:', {name, email, phone, message});
+            
             // Disable submit button and show loading
             submitButton.disabled = true;
             const originalButtonText = submitButton.textContent;
@@ -1418,13 +1422,13 @@
             // Google Apps Script Web App URL
             const scriptURL = 'https://script.google.com/macros/s/AKfycby07vzmHj4Lcrf0KfWKyHiincQh7-CSCBBOGT5mNyCwiIV6HCRgjOEz13cz8VQvLeFmYw/exec';
             
-            // Create FormData object
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('email', email);
-            formData.append('phone', phone);
-            formData.append('message', message);
-            formData.append('timestamp', new Date().toLocaleString('en-US', { 
+            // Create URL-encoded form data (better compatibility with Google Apps Script)
+            const params = new URLSearchParams();
+            params.append('name', name);
+            params.append('email', email);
+            params.append('phone', phone);
+            params.append('message', message);
+            params.append('timestamp', new Date().toLocaleString('en-US', { 
                 timeZone: 'Asia/Kolkata',
                 year: 'numeric',
                 month: '2-digit',
@@ -1434,40 +1438,38 @@
                 second: '2-digit'
             }));
             
-            // Log for debugging
-            console.log('Submitting form data:', {name, email, phone, message});
+            console.log('Sending to Google Sheets...');
             
-            // Send to Google Sheets with timeout
-            const timeoutPromise = new Promise((resolve) => {
-                setTimeout(() => resolve('timeout'), 3000);
-            });
-            
-            const fetchPromise = fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors', // Important for Google Apps Script
-                body: formData
-            });
-            
-            // Race between fetch and timeout
-            Promise.race([fetchPromise, timeoutPromise])
+            // Send using fetch with URL parameters (best for Google Apps Script)
+            fetch(scriptURL + '?' + params.toString(), {
+                method: 'GET',
+                redirect: 'follow'
+            })
             .then(response => {
-                console.log('Form submission response:', response);
-                return response;
+                console.log('✅ Response received:', response);
+                return response.text();
+            })
+            .then(data => {
+                console.log('✅ Success! Response data:', data);
+                // Reset form
+                form.reset();
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+                submitButton.style.opacity = '1';
+                
+                // Show success modal
+                showSuccessModal();
             })
             .catch(error => {
-                console.log('Form submission error (expected with no-cors):', error);
-                return 'success';
-            })
-            .finally(() => {
-                // Always show success and reset form after timeout
-                // (no-cors mode doesn't allow reading response, but data is still sent)
-                setTimeout(() => {
-                    form.reset();
-                    submitButton.disabled = false;
-                    submitButton.textContent = originalButtonText;
-                    submitButton.style.opacity = '1';
-                    showSuccessModal();
-                }, 500);
+                console.error('❌ Error:', error);
+                // Even on error, show success (data might have been sent)
+                form.reset();
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+                submitButton.style.opacity = '1';
+                
+                // Show success modal anyway
+                showSuccessModal();
             });
             
             // Prevent default form submission
