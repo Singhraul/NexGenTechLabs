@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexGen Tech Labs | Full-Stack Development & Cloud Innovation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --accent: #14b8a6;
+            --dark: #1e293b;
+            --light: #ffffff;
+            --gray: #64748b;
+            --bg-light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Modern Sidebar Pattern */
+        .sidebar-pattern {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.03) 0%, rgba(236, 72, 153, 0.03) 100%);
+            z-index: -1;
+        }
+
+        .sidebar-pattern::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(99, 102, 241, 0.05) 50px, rgba(99, 102, 241, 0.05) 51px),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(236, 72, 153, 0.05) 50px, rgba(236, 72, 153, 0.05) 51px);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 5%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.7rem 5%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            font-size: 0.95rem;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Hero Section with Tech Background */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 5% 80px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(236, 72, 153, 0.9)), 
+                        url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            margin-bottom: 1.5rem;
+            color: white;
+            line-height: 1.1;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-text h1 span {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            padding: 0.8rem 2rem;
+            border: 2px solid white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: transparent;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Contact Form in Hero */
+        .hero-contact-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-contact-form h3 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: var(--bg-light);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1rem;
+            color: var(--dark);
+            font-family: inherit;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 5%;
+            background: white;
+        }
+
+        .stats-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(236, 72, 153, 0.05));
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Modern Section Titles with Animation */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 900;
+            letter-spacing: -1px;
+            position: relative;
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            border-radius: 20px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            margin-top: 1.5rem;
+        }
+
+        /* Services Section - Combined with Tech Stack */
+        .services {
+            padding: 100px 5%;
+            background: var(--bg-light);
+            position: relative;
+        }
+
+        .services-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .service-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .service-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.2);
+        }
+
+        .service-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+        .service-card:nth-child(5) { animation-delay: 0.5s; }
+        .service-card:nth-child(6) { animation-delay: 0.6s; }
+        .service-card:nth-child(7) { animation-delay: 0.7s; }
+        .service-card:nth-child(8) { animation-delay: 0.8s; }
+        .service-card:nth-child(9) { animation-delay: 0.9s; }
+        .service-card:nth-child(10) { animation-delay: 1s; }
+        .service-card:nth-child(11) { animation-delay: 1.1s; }
+        .service-card:nth-child(12) { animation-delay: 1.2s; }
+
+        .service-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .service-card:hover .service-icon-wrapper {
+            transform: rotateY(360deg) scale(1.1);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 800;
+        }
+
+        .service-card p {
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Technology Details */
+        .tech-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .tech-details h4 {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .tech-item {
+            color: var(--dark);
+            padding-left: 1.5rem;
+            position: relative;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 5%;
+            background: white;
+        }
+
+        .pricing-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 28px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            animation: bounceIn 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(50px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .pricing-card:nth-child(1) { animation-delay: 0.1s; }
+        .pricing-card:nth-child(2) { animation-delay: 0.3s; }
+        .pricing-card:nth-child(3) { animation-delay: 0.5s; }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.25);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.02), rgba(236, 72, 153, 0.02));
+        }
+
+        .pricing-card.featured::before {
+            content: '⭐ POPULAR';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 70px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .pricing-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 800;
+        }
+
+        .price {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover .price {
+            transform: scale(1.1);
+        }
+
+        .price span {
+            font-size: 1.3rem;
+            color: var(--gray);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 2.5rem 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 1rem 0;
+            color: var(--dark);
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-features li:hover {
+            padding-left: 10px;
+            color: var(--primary);
+        }
+
+        .pricing-features li::before {
+            content: '✓ ';
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            background: rgba(255, 255, 255, 0.1);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transform: translateY(-5px) rotate(360deg);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 0.4rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--dark);
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .sidebar-pattern {
+                width: 100px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Pattern -->
+    <div class="sidebar-pattern"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">NexGen Tech Labs</div>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#contact" class="cta-btn">Get Started</a>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Contact Form -->
+    <section class="hero" id="contact">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Build the <span>Future</span> with Cutting-Edge Technology</h1>
+                <p>We transform ideas into scalable, production-ready applications using modern tech stacks and agile methodologies.</p>
+                <div class="hero-buttons">
+                    <a href="#services" class="btn-secondary">Explore Services</a>
+                </div>
+            </div>
+            <div class="hero-contact-form">
+                <h3>Get In Touch</h3>
+                <form onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" required placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" required placeholder="+1 234 567 8900">
+                    </div>
+                    <div class="form-group">
+                        <label>Project Details</label>
+                        <textarea required placeholder="Tell me about your project..."></textarea>
+                    </div>
+                    <button type="submit" class="cta-btn" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Client Satisfaction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">Fast</div>
+                <div class="stat-label">Delivery Timeline</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">Modern</div>
+                <div class="stat-label">Tech Stack</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section with Integrated Technologies -->
+    <section class="services" id="services">
+        <div class="section-header">
+            <h2 class="section-title">Our Services & Technologies</h2>
+            <p class="section-subtitle">Comprehensive technology solutions with cutting-edge tools and frameworks</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon-wrapper">🎨</div>
+                <h3>UI/UX & Web Design</h3>
+                <p>Beautiful, intuitive designs that engage users and drive conversions.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Figma</span>
+                    <span class="tech-tag">Adobe XD</span>
+                    <span class="tech-tag">Webflow</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">Figma / Adobe XD / Sketch</div>
+                        <div class="tech-item">Photoshop / Illustrator</div>
+                        <div class="tech-item">Webflow / Framer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">💻</div>
+                <h3>Frontend Development</h3>
+                <p>Modern, responsive interfaces with optimal performance.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">TypeScript</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">React / Next.js / Vue.js</div>
+                        <div class="tech-item">TypeScript / JavaScript</div>
+                        <div class="tech-item">Tailwind CSS / Bootstrap</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">⚙️</div>
+                <h3>Backend Development</h3>
+                <p>Robust, scalable server-side solutions with microservices.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Go</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">Node.js / Express / NestJS</div>
+                        <div class="tech-item">Python / Django / FastAPI</div>
+                        <div class="tech-item">Java / Spring Boot</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">📱</div>
+                <h3>Mobile App Development</h3>
+                <p>Native and cross-platform mobile applications.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">React Native</span>
+                    <span class="tech-tag">Flutter</span>
+                    <span class="tech-tag">Swift</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">React Native / Expo</div>
+                        <div class="tech-item">Flutter / Dart</div>
+                        <div class="tech-item">Swift / Kotlin</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">🚀</div>
+                <h3>Cloud & Deployment</h3>
+                <p>Complete cloud infrastructure and CI/CD pipelines.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">AWS</span>
+                    <span class="tech-tag">Kubernetes</span>
+                    <span class="tech-tag">Docker</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">AWS / Azure / Google Cloud</div>
+                        <div class="tech-item">Docker / Kubernetes</div>
+                        <div class="tech-item">Terraform / Ansible</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">🔍</div>
+                <h3>Testing & QA</h3>
+                <p>Comprehensive testing for quality and security.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Jest</span>
+                    <span class="tech-tag">Cypress</span>
+                    <span class="tech-tag">JMeter</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">Jest / Cypress / Selenium</div>
+                        <div class="tech-item">JMeter / K6 / Locust</div>
+                        <div class="tech-item">Postman / Insomnia</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">📊</div>
+                <h3>Data Analytics & BI</h3>
+                <p>Transform data into actionable insights.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Power BI</span>
+                    <span class="tech-tag">Tableau</span>
+                    <span class="tech-tag">Python</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">Power BI / Tableau</div>
+                        <div class="tech-item">Google Analytics / Mixpanel</div>
+                        <div class="tech-item">Pandas / NumPy</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">🤖</div>
+                <h3>AI/ML Integration</h3>
+                <p>Integrate AI to automate and optimize processes.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">TensorFlow</span>
+                    <span class="tech-tag">OpenAI</span>
+                    <span class="tech-tag">PyTorch</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">TensorFlow / PyTorch</div>
+                        <div class="tech-item">OpenAI / Anthropic APIs</div>
+                        <div class="tech-item">Hugging Face / LangChain</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">🛒</div>
+                <h3>E-Commerce Solutions</h3>
+                <p>Complete platforms with payment integration.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Shopify</span>
+                    <span class="tech-tag">WooCommerce</span>
+                    <span class="tech-tag">Stripe</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">Shopify / WooCommerce</div>
+                        <div class="tech-item">Stripe / PayPal / Razorpay</div>
+                        <div class="tech-item">Medusa / Saleor</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">🔧</div>
+                <h3>API Development</h3>
+                <p>RESTful and GraphQL API design and integration.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">REST</span>
+                    <span class="tech-tag">GraphQL</span>
+                    <span class="tech-tag">Swagger</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">REST / GraphQL</div>
+                        <div class="tech-item">Swagger / OpenAPI</div>
+                        <div class="tech-item">Postman / Insomnia</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">📈</div>
+                <h3>SEO & Performance</h3>
+                <p>Optimize for search engines and speed.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">SEO Audits</span>
+                    <span class="tech-tag">Lighthouse</span>
+                    <span class="tech-tag">GTmetrix</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">Google Search Console</div>
+                        <div class="tech-item">Lighthouse / PageSpeed</div>
+                        <div class="tech-item">SEMrush / Ahrefs</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon-wrapper">🛡️</div>
+                <h3>Consulting & Support</h3>
+                <p>Technical consulting and 24/7 maintenance.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Code Audit</span>
+                    <span class="tech-tag">Tech Strategy</span>
+                    <span class="tech-tag">24/7 Support</span>
+                </div>
+                <div class="tech-details">
+                    <h4>🛠️ Technologies We Use:</h4>
+                    <div class="tech-list">
+                        <div class="tech-item">Architecture Review</div>
+                        <div class="tech-item">Code Quality Analysis</div>
+                        <div class="tech-item">Performance Optimization</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2 class="section-title">Flexible Pricing</h2>
+            <p class="section-subtitle">Choose the pricing model that works best for your project</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Hourly</h3>
+                <div class="price">$50<span>/hour</span></div>
+                <ul class="pricing-features">
+                    <li>Perfect for short-term tasks</li>
+                    <li>Flexible scheduling</li>
+                    <li>Pay as you go</li>
+                    <li>No long-term commitment</li>
+                    <li>Ideal for consultations</li>
+                </ul>
+                <a href="#contact" class="cta-btn" style="width: 100%; display: block; text-align: center; text-decoration: none;">Get Started</a>
+            </div>
+
+            <div class="pricing-card featured">
+                <h3>Project-Based</h3>
+                <div class="price">Custom<span>/project</span></div>
+                <ul class="pricing-features">
+                    <li>Fixed scope & timeline</li>
+                    <li>Detailed project planning</li>
+                    <li>Milestone-based payments</li>
+                    <li>Best value for money</li>
+                    <li>Comprehensive delivery</li>
+                </ul>
+                <a href="#contact" class="cta-btn" style="width: 100%; display: block; text-align: center; text-decoration: none;">Request Quote</a>
+            </div>
+
+            <div class="pricing-card">
+                <h3>Retainer</h3>
+                <div class="price">$4K+<span>/month</span></div>
+                <ul class="pricing-features">
+                    <li>Dedicated monthly hours</li>
+                    <li>Priority support</li>
+                    <li>Ongoing maintenance</li>
+                    <li>Strategic partnership</li>
+                    <li>Cost-effective long-term</li>
+                </ul>
+                <a href="#contact" class="cta-btn" style="width: 100%; display: block; text-align: center; text-decoration: none;">Let's Talk</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>NexGen Tech Labs</h3>
+                <p>Building the future with cutting-edge technology solutions.</p>
+                <div class="social-links">
+                    <a href="https://www.linkedin.com/in/sheevendra" target="_blank" title="LinkedIn">💼</a>
+                    <a href="https://github.com/Singhraul" target="_blank" title="GitHub">💻</a>
+                    <a href="/cdn-cgi/l/email-protection#394a515c5c4f5c575d4b58174a50575e514b584c55795e54585055175a5654" title="Email">📧</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Services</h3>
+                <a href="#services">Frontend Development</a>
+                <a href="#services">Backend Development</a>
+                <a href="#services">Cloud & Deployment</a>
+                <a href="#services">Mobile Development</a>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <a href="#services">About Us</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a0d3c8c5c5d6c5cec4d2c18ed3c9cec7c8d2c1d5cce0c7cdc1c9cc8ec3cfcd">[email&#160;protected]</a></p>
+                <p>📱 +91 7000717879</p>
+                <p>📍 Bangalore, Karnataka, India</p>
+                <p>💼 <a href="https://www.linkedin.com/in/sheevendra" target="_blank" style="display: inline;">LinkedIn Profile</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 NexGen Tech Labs. Built by Sheevendra Singh. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Thank you for your message! I will get back to you soon.');
+            event.target.reset();
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+       
