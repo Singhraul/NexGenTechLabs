@@ -999,19 +999,19 @@
                 <form id="contactForm" onsubmit="return handleSubmit(event);">
                     <div class="form-group">
                         <label>Your Name</label>
-                        <input type="text" name="name" id="name" required placeholder="John Doe">
+                        <input type="text" id="name" required placeholder="John Doe">
                     </div>
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" name="email" id="email" required placeholder="john@example.com">
+                        <input type="email" id="email" required placeholder="john@example.com">
                     </div>
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="tel" name="phone" id="phone" required placeholder="+1 234 567 8900">
+                        <input type="tel" id="phone" required placeholder="+1 234 567 8900">
                     </div>
                     <div class="form-group">
                         <label>Project Details</label>
-                        <textarea name="message" id="message" required placeholder="Tell me about your project..."></textarea>
+                        <textarea id="message" required placeholder="Tell me about your project..."></textarea>
                     </div>
                     <button type="submit" class="cta-btn" style="width: 100%;">Send Message</button>
                 </form>
@@ -1388,7 +1388,17 @@
 
         // Form submission with Google Forms integration
         function handleSubmit(event) {
-            event.preventDefault();
+            console.log('🔵 handleSubmit called - Form submission started');
+            
+            // CRITICAL: Prevent default form submission
+            if (event && event.preventDefault) {
+                event.preventDefault();
+            }
+            if (event && event.stopPropagation) {
+                event.stopPropagation();
+            }
+            
+            console.log('🔵 preventDefault executed');
             
             const form = document.getElementById('contactForm');
             const submitButton = form.querySelector('button[type="submit"]');
@@ -1398,24 +1408,40 @@
             const phone = document.getElementById('phone').value.trim();
             const message = document.getElementById('message').value.trim();
             
+            console.log('📋 Form data collected:');
+            console.log('  Name:', name);
+            console.log('  Email:', email);
+            console.log('  Phone:', phone);
+            console.log('  Message:', message.substring(0, 50) + '...');
+            
             if (!name || !email || !phone || !message) {
+                console.log('❌ Validation failed: empty fields detected');
                 alert('Please fill all fields');
                 return false;
             }
             
+            console.log('✅ All fields filled');
+            
             // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
+                console.log('❌ Validation failed: invalid email format');
                 alert('Please enter a valid email address');
                 return false;
             }
+            
+            console.log('✅ Email validation passed');
             
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
             submitButton.style.opacity = '0.7';
             
+            console.log('🔄 Button disabled, starting submission...');
+            
             // Google Form submission URL (formResponse endpoint)
             const googleFormURL = 'https://docs.google.com/forms/d/e/1FAIpQLScYK-2lhSICEojmujIyQgFJRPaKGrX4KtcdHYuP0x0orSoEIA/formResponse';
+            
+            console.log('🌐 Form URL:', googleFormURL);
             
             // Create form data with VERIFIED CORRECT entry IDs
             const formData = new FormData();
@@ -1424,6 +1450,13 @@
             formData.append('entry.1623004254', phone);      // Phone field
             formData.append('entry.869596150', message);     // Message field
             
+            console.log('📦 FormData created with entries:');
+            console.log('  entry.335612451 (email):', email);
+            console.log('  entry.1384779598 (name):', name);
+            console.log('  entry.1623004254 (phone):', phone);
+            console.log('  entry.869596150 (message):', message.substring(0, 30) + '...');
+            console.log('🚀 Initiating fetch request...');
+            
             // Submit to Google Forms using no-cors mode
             // Note: no-cors mode means we won't get a response, but the data will still be submitted
             fetch(googleFormURL, {
@@ -1431,6 +1464,7 @@
                 mode: 'no-cors',
                 body: formData
             }).then(() => {
+                console.log('✅✅✅ FETCH COMPLETED SUCCESSFULLY! ✅✅✅');
                 console.log('✓ Form data sent to Google Forms');
                 console.log('Data submitted:', { name, email, phone, message });
                 form.reset();
@@ -1440,8 +1474,10 @@
                 showSuccessModal();
             }).catch((error) => {
                 // Even if we get an error in no-cors mode, the form likely submitted
+                console.log('⚠️ Fetch catch block triggered (normal for no-cors)');
                 console.log('✓ Form submission completed (no-cors mode)');
                 console.log('Data submitted:', { name, email, phone, message });
+                console.error('Error object:', error);
                 form.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Message';
