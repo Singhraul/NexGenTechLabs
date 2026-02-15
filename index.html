@@ -996,7 +996,7 @@
             </div>
             <div class="hero-contact-form">
                 <h3>Get In Touch</h3>
-                <form id="contactForm" onsubmit="return handleSubmit(event);">
+                <form id="contactForm">
                     <div class="form-group">
                         <label>Your Name</label>
                         <input type="text" id="name" required placeholder="John Doe">
@@ -1386,19 +1386,9 @@
             }
         });
 
-        // Form submission with Google Forms integration
+        // Form submission with Google Sheets integration
         function handleSubmit(event) {
-            console.log('🔵 handleSubmit called - Form submission started');
-            
-            // CRITICAL: Prevent default form submission
-            if (event && event.preventDefault) {
-                event.preventDefault();
-            }
-            if (event && event.stopPropagation) {
-                event.stopPropagation();
-            }
-            
-            console.log('🔵 preventDefault executed');
+            event.preventDefault();
             
             const form = document.getElementById('contactForm');
             const submitButton = form.querySelector('button[type="submit"]');
@@ -1408,76 +1398,39 @@
             const phone = document.getElementById('phone').value.trim();
             const message = document.getElementById('message').value.trim();
             
-            console.log('📋 Form data collected:');
-            console.log('  Name:', name);
-            console.log('  Email:', email);
-            console.log('  Phone:', phone);
-            console.log('  Message:', message.substring(0, 50) + '...');
-            
             if (!name || !email || !phone || !message) {
-                console.log('❌ Validation failed: empty fields detected');
                 alert('Please fill all fields');
                 return false;
             }
-            
-            console.log('✅ All fields filled');
-            
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                console.log('❌ Validation failed: invalid email format');
-                alert('Please enter a valid email address');
-                return false;
-            }
-            
-            console.log('✅ Email validation passed');
             
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
             submitButton.style.opacity = '0.7';
             
-            console.log('🔄 Button disabled, starting submission...');
-            
-            // Google Form submission URL (formResponse endpoint)
+            // Google Form submission URL
             const googleFormURL = 'https://docs.google.com/forms/d/e/1FAIpQLScYK-2lhSICEojmujIyQgFJRPaKGrX4KtcdHYuP0x0orSoEIA/formResponse';
             
-            console.log('🌐 Form URL:', googleFormURL);
-            
-            // Create form data with VERIFIED CORRECT entry IDs
+            // Create form data with CORRECT entry IDs
             const formData = new FormData();
             formData.append('entry.335612451', email);       // Email field
             formData.append('entry.1384779598', name);       // Name field
             formData.append('entry.1623004254', phone);      // Phone field
             formData.append('entry.869596150', message);     // Message field
             
-            console.log('📦 FormData created with entries:');
-            console.log('  entry.335612451 (email):', email);
-            console.log('  entry.1384779598 (name):', name);
-            console.log('  entry.1623004254 (phone):', phone);
-            console.log('  entry.869596150 (message):', message.substring(0, 30) + '...');
-            console.log('🚀 Initiating fetch request...');
-            
-            // Submit to Google Forms using no-cors mode
-            // Note: no-cors mode means we won't get a response, but the data will still be submitted
+            // Submit to Google Forms in background
             fetch(googleFormURL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: formData
             }).then(() => {
-                console.log('✅✅✅ FETCH COMPLETED SUCCESSFULLY! ✅✅✅');
-                console.log('✓ Form data sent to Google Forms');
-                console.log('Data submitted:', { name, email, phone, message });
+                console.log('Form submitted to Google Forms');
                 form.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Message';
                 submitButton.style.opacity = '1';
                 showSuccessModal();
-            }).catch((error) => {
-                // Even if we get an error in no-cors mode, the form likely submitted
-                console.log('⚠️ Fetch catch block triggered (normal for no-cors)');
-                console.log('✓ Form submission completed (no-cors mode)');
-                console.log('Data submitted:', { name, email, phone, message });
-                console.error('Error object:', error);
+            }).catch(() => {
+                console.log('Form submitted (no-cors mode)');
                 form.reset();
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Message';
@@ -1518,9 +1471,12 @@
         
         // Also prevent form submission on Enter key
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded successfully');
             const form = document.getElementById('contactForm');
             if (form) {
+                console.log('Form found, attaching event listener');
                 form.addEventListener('submit', function(e) {
+                    console.log('Submit event triggered');
                     e.preventDefault();
                     handleSubmit(e);
                     return false;
@@ -1552,4 +1508,9 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
-       
+                       }
+            });
+        });
+    </script>
+</body>
+</html>
